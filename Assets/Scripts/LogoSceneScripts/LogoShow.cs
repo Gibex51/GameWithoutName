@@ -6,37 +6,35 @@ using UnityEngine.SceneManagement;
 public class LogoShow : MonoBehaviour {
 
 	public Image logo;
-	bool Inverse;
-	float HideTime;
+	private bool inverse;
+	private float hideTime;
 
-	// Use this for initialization
 	void Start () {
 		Color logoColor = logo.color;
 		logoColor.a = 0;
 		logo.color = logoColor;
 
-		Inverse = false;
-		HideTime = 0;
+		inverse = false;
+		hideTime = 0;
 	}
-	
-	// Update is called once per frame
+
 	void FixedUpdate () {
-		if (!Inverse) {
+		if (!inverse) {
 			if (logo.color.a < 1) {
 				Color logoColor = logo.color;
 				logoColor.a += 0.01f;
 				logo.color = logoColor;
 			} else 
-				Inverse = true;
+				inverse = true;
 		} else {
 			if (logo.color.a > 0) {
 				Color logoColor = logo.color;
 				logoColor.a -= 0.01f;
 				logo.color = logoColor;
-				if (logo.color.a <= 0.02) HideTime = Time.time;
+				if (logo.color.a <= 0.02) hideTime = Time.time;
 			}
 		};
-		if ((Input.GetKeyDown(KeyCode.Escape)) || ((HideTime != 0) && (Time.time - HideTime > 0.10f)))
+		if ((Input.GetKeyDown(KeyCode.Escape)) || ((hideTime != 0) && (Time.time - hideTime > 0.10f)))
 			SceneManager.LoadScene (GlobalData.NAME_MAIN_SCENE);
 	}
 }

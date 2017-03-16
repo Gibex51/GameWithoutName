@@ -14,24 +14,24 @@ public class MenuEvents : MonoBehaviour {
 		GlobalData.gameStateManager.ApplyGameState (newGameState);
 	}
 
-	public void continueButtonClick(){
+	public void ContinueButtonClick(){
 		SceneManager.LoadScene (GlobalData.NAME_LEVEL_SCENE);
 	}
 
-	public void startGameButtonClick(){
+	public void StartGameButtonClick(){
 		CreateAndSetNewGameState ();
 		SceneManager.LoadScene (GlobalData.NAME_LEVEL_SCENE);
 	}
 
-	public void newGameButtonClick(){
+	public void NewGameButtonClick(){
 		mainScreenSelector.SelectScreen ((int)MainScreenIndices.START_GAME);
 	}
 
-	public void exitButtonClick(){
+	public void ExitButtonClick(){
 		Application.Quit ();
 	}
 
-	public void loadButtonClick() {
+	public void LoadButtonClick() {
 		GameState newGameState = GlobalData.gameStateManager.GetSavedGameState (1);
 		GlobalData.gameStateManager.ApplyGameState (newGameState);
 		SceneManager.LoadScene (GlobalData.NAME_LEVEL_SCENE);

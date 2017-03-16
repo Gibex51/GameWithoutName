@@ -6,7 +6,7 @@ public class LoadingScreenScript : MonoBehaviour, CommonScreenInterface {
 	public ScreenSelector levelScreenSelector;
 
 	private void LoadLocation(GameState gameState) {
-		Debug.Log ("Start loading location: " + gameState.location.getName());
+		Debug.Log ("Start loading location: " + gameState.location.GetName());
 
 		if ((gameState.location.firstPhraseNpcId > 0) && (gameState.location.firstPhraseId > 0) && (!gameState.returnToLocationFlag)) {
 			Debug.Log ("Go to dialog screen");
@@ -19,7 +19,7 @@ public class LoadingScreenScript : MonoBehaviour, CommonScreenInterface {
 	}
 	
 	private void LoadSector(GameState gameState) {
-		Debug.Log ("Start loading sector: " + gameState.sector.getName());
+		Debug.Log ("Start loading sector: " + gameState.sector.GetName());
 		levelScreenSelector.SelectScreen ((int)LevelScreenIndices.SECTOR);
 	}
 

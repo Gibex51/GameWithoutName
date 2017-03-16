@@ -15,41 +15,41 @@ public class MapScreenLoader : MonoBehaviour, CommonScreenInterface {
 		}
 	}
 
-	private void onSectorClickListener(SectorState sectorState) {
+	private void OnSectorClickListener(SectorState sectorState) {
 		GameState currGameState = GlobalData.gameStateManager.GetCurrentGameState ();
 		currGameState.sector = sectorState;
 		levelScreenSelector.SelectScreen ((int)LevelScreenIndices.LOADING);
 	}
 
-	private void addSectorToContainer(SectorState sectorState, int sectorIndex) {
+	private void AddSectorToContainer(SectorState sectorState, int sectorIndex) {
 		GameObject currLocationObj = Instantiate (sectorPointPrefab, new Vector3 (), new Quaternion ()) as GameObject;
 
 		// Реакция на нажатие
-		GameObject SecButton = currLocationObj.transform.FindChild ("Button").gameObject;
-		SecButton.GetComponent<Button> ().onClick.AddListener (() => onSectorClickListener(sectorState));
+		GameObject secButton = currLocationObj.transform.FindChild ("Button").gameObject;
+		secButton.GetComponent<Button> ().onClick.AddListener (() => OnSectorClickListener(sectorState));
 
 		// Текст
-		GameObject SecText = SecButton.transform.FindChild ("Text").gameObject;
+		GameObject secText = secButton.transform.FindChild ("Text").gameObject;
 		string secHiddenMark = sectorState.isVisible ? "" : "[*] ";
-		SecText.GetComponent<Text> ().text = secHiddenMark + sectorState.getName();
+		secText.GetComponent<Text> ().text = secHiddenMark + sectorState.GetName();
 
 		// Позиционирование
-		RectTransform AnswRT = currLocationObj.GetComponent<RectTransform> ();
-		AnswRT.SetParent(sectorsContainer);
-		AnswRT.localScale = new Vector3 (1, 1, 1);
-		AnswRT.anchorMin = sectorState.getNormalCoords ();
-		AnswRT.anchorMax = AnswRT.anchorMin;
-		AnswRT.offsetMax = new Vector2 (0, 0);
-		AnswRT.offsetMin = new Vector2 (0, 0);
+		RectTransform answRT = currLocationObj.GetComponent<RectTransform> ();
+		answRT.SetParent(sectorsContainer);
+		answRT.localScale = new Vector3 (1, 1, 1);
+		answRT.anchorMin = sectorState.GetNormalCoords ();
+		answRT.anchorMax = answRT.anchorMin;
+		answRT.offsetMax = new Vector2 (0, 0);
+		answRT.offsetMin = new Vector2 (0, 0);
 	}
 
 	public void OnLoad() {
 		Debug.Log ("[" + ToString() + "] Loaded");
 		ClearContainer ();
-		List<SectorState> sectorList = GlobalData.resourcesManager.getSectors ();
+		List<SectorState> sectorList = GlobalData.resourcesManager.GetSectors ();
 		Debug.Log ("Sectors on map: " + sectorList.Count);
 		for (int secInd = 0; secInd < sectorList.Count; secInd++) {
-			addSectorToContainer (sectorList[secInd], secInd);
+			AddSectorToContainer (sectorList[secInd], secInd);
 		}
 	}
 }

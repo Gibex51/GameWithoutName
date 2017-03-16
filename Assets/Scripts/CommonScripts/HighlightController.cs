@@ -16,7 +16,6 @@ public class HighlightController : MonoBehaviour {
 	public Color DefaultColor;
 	public Color HighlightedColor;
 
-    // Use this for initialization
     public void ClearHighlights () {
         for (int objInd = 0; objInd < Objects.Length; objInd++){
 			Objects[objInd].compImage.color = DefaultColor;

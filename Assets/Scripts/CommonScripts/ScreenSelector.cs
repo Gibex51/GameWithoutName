@@ -25,10 +25,10 @@ public class ScreenSelector : MonoBehaviour {
     }
 
 	private IEnumerator ExecuteEvents() {
-		MonoBehaviour[] Comps = Screens[currentScreen].screen.GetComponents<MonoBehaviour> ();
-		for (int compInd = 0; compInd < Comps.Length; compInd++) {
-			if (!(Comps[compInd] is CommonScreenInterface)) continue;
-			(Comps[compInd] as CommonScreenInterface).OnLoad ();
+		MonoBehaviour[] components = Screens[currentScreen].screen.GetComponents<MonoBehaviour> ();
+		for (int compInd = 0; compInd < components.Length; compInd++) {
+			if (!(components[compInd] is CommonScreenInterface)) continue;
+			(components[compInd] as CommonScreenInterface).OnLoad ();
 		}
 		yield break;
 	}

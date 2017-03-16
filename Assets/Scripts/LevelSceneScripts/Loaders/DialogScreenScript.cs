@@ -69,7 +69,7 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 		rt.offsetMin = new Vector2 (0, 0);
 	}
 
-	private void runAction(QuestAction action) {
+	private void RunAction(QuestAction action) {
 		switch (action.actionType) {
 		case ActionType.ACT_TYPE_ADD_MEMBER: // [ MAKE IT! ]
 			{
@@ -79,7 +79,7 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 			}
 		case ActionType.ACT_TYPE_CHANGE_QUEST:
 			{
-				GlobalData.resourcesManager.getById<QuestState>(uint.Parse (action.actionVariables [0]))
+				GlobalData.resourcesManager.GetById<QuestState>(uint.Parse (action.actionVariables [0]))
 					.status = (QuestStatus) uint.Parse (action.actionVariables [1]);
 				Debug.Log("Action: Change quest");
 				break;
@@ -93,9 +93,9 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 			}
 		case ActionType.ACT_TYPE_CHANGE_SPEECH:
 			{
-				GlobalData.resourcesManager.getById<NPCState>(uint.Parse (action.actionVariables [0]))
+				GlobalData.resourcesManager.GetById<NPCState>(uint.Parse (action.actionVariables [0]))
 					.GetPhrase(uint.Parse (action.actionVariables [1]))
-					.getAnswer(uint.Parse (action.actionVariables [2]))
+					.GetAnswer(uint.Parse (action.actionVariables [2]))
 					.isActive = bool.Parse (action.actionVariables [3]);
 				Debug.Log("Action: Change speech");
 				break;
@@ -125,7 +125,7 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 		case ActionType.ACT_TYPE_LOC_VISIBLE:
 			{
 				uint changedLocId = uint.Parse (action.actionVariables [0]);
-				LocationState locState = GlobalData.resourcesManager.getById<LocationState> (changedLocId);
+				LocationState locState = GlobalData.resourcesManager.GetById<LocationState> (changedLocId);
 				if (locState != null)
 					locState.isVisible = bool.Parse(action.actionVariables [1]);
 				Debug.Log("Action: Location visibility change");
@@ -134,7 +134,7 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 		case ActionType.ACT_TYPE_MOVE_NPC:
 			{
 				uint changedLocId = uint.Parse (action.actionVariables [1]);
-				LocationState locState = GlobalData.resourcesManager.getById<LocationState> (changedLocId);
+				LocationState locState = GlobalData.resourcesManager.GetById<LocationState> (changedLocId);
 				locState.firstPhraseNpcId = uint.Parse (action.actionVariables [0]);
 				locState.firstPhraseId = uint.Parse (action.actionVariables [2]);
 
@@ -150,7 +150,7 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 		case ActionType.ACT_TYPE_SECT_VISIBLE:
 			{
 				uint changedSecId = uint.Parse (action.actionVariables [0]);
-				SectorState secState = GlobalData.resourcesManager.getById<SectorState> (changedSecId);
+				SectorState secState = GlobalData.resourcesManager.GetById<SectorState> (changedSecId);
 				if (secState != null)
 					secState.isVisible = bool.Parse(action.actionVariables [1]);
 				Debug.Log("Action: Sector visibility change");
@@ -158,18 +158,18 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 			}
 		case ActionType.ACT_TYPE_CHANGE_COUNTER:
 			{
-				AnswerState changedAnswer = GlobalData.resourcesManager.getById<NPCState> (uint.Parse (action.actionVariables [0]))
+				AnswerState changedAnswer = GlobalData.resourcesManager.GetById<NPCState> (uint.Parse (action.actionVariables [0]))
 					.GetPhrase (uint.Parse (action.actionVariables [1]))
-					.getAnswer (uint.Parse (action.actionVariables [2]));
-				changedAnswer.decreaseCounter ();
+					.GetAnswer (uint.Parse (action.actionVariables [2]));
+				changedAnswer.DecreaseCounter ();
 
-				if (changedAnswer.getCounter () <= 0) {
+				if (changedAnswer.GetCounter () <= 0) {
 					foreach (QuestAction cntAction in changedAnswer.actionsList) {
 						if (!cntAction.isCounterAction)
 							continue;
 
 						try {
-							runAction (cntAction);
+							RunAction (cntAction);
 						} catch (Exception e) {
 							Debug.LogException (e);
 							Debug.LogError ("Invalid Counter Action: " + changedAnswer.ToString ());
@@ -183,19 +183,19 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 		}
 	}
 		
-	private void onAnswerClickListener(AnswerState answer) {
+	private void OnAnswerClickListener(AnswerState answer) {
 		Debug.Log ("Actions count: " + answer.actionsList.Count);
 
-		nextPhraseId = answer.getNextPhraseId();
+		nextPhraseId = answer.GetNextPhraseId();
 
-		if (answer.isAutohide())
+		if (answer.IsAutohide())
 			answer.isActive = false;
 
 		foreach (QuestAction action in answer.actionsList) {
 			if (action.isCounterAction) continue;
 
 			try {
-				runAction(action);
+				RunAction(action);
 			} catch (Exception e) {
 				Debug.LogException (e);
 				Debug.LogError("Invalid Action: " + answer.ToString());
@@ -211,13 +211,13 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 
 		// Реакция на нажатие
 		GameObject answButton = currAnswerObj.transform.FindChild ("Button").gameObject;
-		answButton.GetComponent<Button> ().onClick.AddListener (() => onAnswerClickListener(answerState));
+		answButton.GetComponent<Button> ().onClick.AddListener (() => OnAnswerClickListener(answerState));
 
 		// Текст
 		GameObject answText = answButton.transform.FindChild ("Text").gameObject;
 		string answerHiddenMark = answerState.isActive ? "" : "[*] ";
 		Text answerTextComp = answText.GetComponent<Text> ();
-		answerTextComp.text = answerHiddenMark + answerState.getText();
+		answerTextComp.text = answerHiddenMark + answerState.GetText();
 
 		// Позиционирование
 		RectTransform answRT = currAnswerObj.GetComponent<RectTransform> ();
@@ -251,9 +251,9 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 		}
 		Debug.Log ("Goto Phrase: " + phrase.ToString());
 
-		npcPhraseText.text = phrase.getText ();
+		npcPhraseText.text = phrase.GetText ();
 
-		List<AnswerState> answers = phrase.getAnswers ();
+		List<AnswerState> answers = phrase.GetAnswers ();
 
 		ClearContainer ();
 		for (int answInd = 0; answInd < answers.Count; answInd++) {
@@ -269,14 +269,14 @@ public class DialogScreenScript : MonoBehaviour, CommonScreenInterface {
 	}
 
 	private void SelectNPC(uint npcId) {
-		currentNpc = GlobalData.resourcesManager.getById<NPCState> (npcId);
+		currentNpc = GlobalData.resourcesManager.GetById<NPCState> (npcId);
 		if (currentNpc == null) {
 			Debug.LogWarning ("Current dialog npc is null!");
 			return;
 		}
 		Debug.Log ("NPC selected: " + currentNpc.ToString());
 
-		npcNameText.text = currentNpc.getName ();
+		npcNameText.text = currentNpc.GetName ();
 	}
 
 	public void OnLoad() {

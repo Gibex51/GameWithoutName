@@ -6,31 +6,31 @@ public class GameUIEvents : MonoBehaviour {
 
 	public ScreenSelector levelScreenSelector;
 
-	public void menuButtonClick(){
+	public void MenuButtonClick(){
 		SceneManager.LoadScene (GlobalData.NAME_MAIN_SCENE);
 	}
 
-    public void exitButtonClick(){
+    public void ExitButtonClick(){
         Application.Quit();
     }
 		
-	public void returnToSectorButtonClick() {
+	public void ReturnToSectorButtonClick() {
 		GameState currGameState = GlobalData.gameStateManager.GetCurrentGameState ();
 		currGameState.location = null;
 		levelScreenSelector.SelectScreen ((int)LevelScreenIndices.LOADING);
 	}
 
-	public void returnToMapButtonClick() {
+	public void ReturnToMapButtonClick() {
 		GameState currGameState = GlobalData.gameStateManager.GetCurrentGameState ();
 		currGameState.sector = null;
 		levelScreenSelector.SelectScreen ((int)LevelScreenIndices.LOADING);
 	}
 
-	public void gotoLocation(uint locationId) {
+	public void GotoLocation(uint locationId) {
 
 	}
 
-	public void saveButtonClick() {
+	public void SaveButtonClick() {
 		GlobalData.gameStateManager.SaveCurrentGameState (1);
 	}
 }

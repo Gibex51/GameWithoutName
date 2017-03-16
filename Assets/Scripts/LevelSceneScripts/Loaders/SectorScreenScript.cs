@@ -14,32 +14,32 @@ public class SectorScreenScript : MonoBehaviour, CommonScreenInterface {
 		}
 	}
 
-	private void onLocationClickListener(LocationState locState) {
+	private void OnLocationClickListener(LocationState locState) {
 		GameState currGameState = GlobalData.gameStateManager.GetCurrentGameState ();
 		currGameState.location = locState;
 		levelScreenSelector.SelectScreen ((int)LevelScreenIndices.LOADING);
 	}
 
-	private void addLocationToContainer(LocationState locState, int locationIndex) {
+	private void AddLocationToContainer(LocationState locState, int locationIndex) {
 		GameObject currLocationObj = Instantiate (locationPointPrefab, new Vector3 (), new Quaternion ()) as GameObject;
 
 		// Реакция на нажатие
-		GameObject LocButton = currLocationObj.transform.FindChild ("Button").gameObject;
-		LocButton.GetComponent<Button> ().onClick.AddListener (() => onLocationClickListener(locState));
+		GameObject locButton = currLocationObj.transform.FindChild ("Button").gameObject;
+		locButton.GetComponent<Button> ().onClick.AddListener (() => OnLocationClickListener(locState));
 
 		// Текст
-		GameObject LocText = LocButton.transform.FindChild ("Text").gameObject;
+		GameObject locText = locButton.transform.FindChild ("Text").gameObject;
 		string locHiddenMark = locState.isVisible ? "" : "[*] ";
-		LocText.GetComponent<Text> ().text = locHiddenMark + locState.getName();
+		locText.GetComponent<Text> ().text = locHiddenMark + locState.GetName();
 
 		// Позиционирование
-		RectTransform AnswRT = currLocationObj.GetComponent<RectTransform> ();
-		AnswRT.SetParent(locationsContainer);
-		AnswRT.localScale = new Vector3 (1, 1, 1);
-		AnswRT.anchorMin = new Vector2 (0.2f + Random.Range(0.0f, 0.6f), 0.2f + Random.Range(0.0f, 0.6f));
-		AnswRT.anchorMax = AnswRT.anchorMin;
-		AnswRT.offsetMax = new Vector2 (0, 0);
-		AnswRT.offsetMin = new Vector2 (0, 0);
+		RectTransform answRT = currLocationObj.GetComponent<RectTransform> ();
+		answRT.SetParent(locationsContainer);
+		answRT.localScale = new Vector3 (1, 1, 1);
+		answRT.anchorMin = new Vector2 (0.2f + Random.Range(0.0f, 0.6f), 0.2f + Random.Range(0.0f, 0.6f));
+		answRT.anchorMax = answRT.anchorMin;
+		answRT.offsetMax = new Vector2 (0, 0);
+		answRT.offsetMin = new Vector2 (0, 0);
 	}
 
 
@@ -47,9 +47,9 @@ public class SectorScreenScript : MonoBehaviour, CommonScreenInterface {
 		Debug.Log ("[" + ToString() + "] Loaded");
 		GameState currGameState = GlobalData.gameStateManager.GetCurrentGameState ();
 		ClearContainer ();
-		Debug.Log ("Locations in sector: " + currGameState.sector.getLocationsCount ());
-		for (int locInd = 0; locInd < currGameState.sector.getLocationsCount (); locInd++) {
-			addLocationToContainer (currGameState.sector.getLocation(locInd), locInd);
+		Debug.Log ("Locations in sector: " + currGameState.sector.GetLocationsCount ());
+		for (int locInd = 0; locInd < currGameState.sector.GetLocationsCount (); locInd++) {
+			AddLocationToContainer (currGameState.sector.GetLocation(locInd), locInd);
 		}
 	}
 }

@@ -24,18 +24,18 @@ public class GameState {
 	private const string SAVE_SECTORID_ELEMENT_NAME = "sectorid";
 	private const string SAVE_LOCID_ELEMENT_NAME = "locationid";
 
-	private void saveGameStateToFile(string filename) {
+	private void SaveGameStateToFile(string filename) {
 		XElement rootElement = new XElement(SAVE_ROOT_ELEMENT_NAME);
 		XDocument xmlLevelData = new XDocument (rootElement);
 
-		rootElement.Add (new XElement (SAVE_SECTORID_ELEMENT_NAME, sector == null ? 0 : sector.getId()));
-		rootElement.Add (new XElement (SAVE_LOCID_ELEMENT_NAME, location == null ? 0 : location.getId()));
+		rootElement.Add (new XElement (SAVE_SECTORID_ELEMENT_NAME, sector == null ? 0 : sector.GetId()));
+		rootElement.Add (new XElement (SAVE_LOCID_ELEMENT_NAME, location == null ? 0 : location.GetId()));
 
 		Directory.CreateDirectory (Directory.GetParent(filename).FullName);
 		xmlLevelData.Save (filename);
 	}
 
-	private void loadGameStateFromFile(string filename) {
+	private void LoadGameStateFromFile(string filename) {
 		if (!File.Exists (filename)) {
 			Debug.LogWarning ("Save file not exists");
 			return;
@@ -53,32 +53,32 @@ public class GameState {
 		foreach (XElement groupElement in rootElement.Nodes()) {
 			switch (groupElement.Name.LocalName) {
 			case SAVE_SECTORID_ELEMENT_NAME: {
-					sector = GlobalData.resourcesManager.getById<SectorState> (uint.Parse (groupElement.Value));
+					sector = GlobalData.resourcesManager.GetById<SectorState> (uint.Parse (groupElement.Value));
 					break;
 				}
 			case SAVE_LOCID_ELEMENT_NAME: {
-					location = GlobalData.resourcesManager.getById<LocationState> (uint.Parse (groupElement.Value));
+					location = GlobalData.resourcesManager.GetById<LocationState> (uint.Parse (groupElement.Value));
 					break;
 				}
 			}
 		}
 	}
 
-	public void setSaveFileName(string saveFileName) {
+	public void SetSaveFileName(string saveFileName) {
 		this.saveFileName = saveFileName;
 	}
 
-	public void loadDataFromFiles() {
-		GlobalData.resourcesManager.loadResourcesFromFile (saveFileName + RES_EXT);
-		loadGameStateFromFile (saveFileName + GS_EXT);
+	public void LoadDataFromFiles() {
+		GlobalData.resourcesManager.LoadResourcesFromFile (saveFileName + RES_EXT);
+		LoadGameStateFromFile (saveFileName + GS_EXT);
 	}
 
-	public void saveDataToFiles() {
-		GlobalData.resourcesManager.saveResourcesToFile (saveFileName + RES_EXT);
-		saveGameStateToFile (saveFileName + GS_EXT);
+	public void SaveDataToFiles() {
+		GlobalData.resourcesManager.SaveResourcesToFile (saveFileName + RES_EXT);
+		SaveGameStateToFile (saveFileName + GS_EXT);
 	}
 
-	public void getInfoFromSavedFile() {
+	public void GetInfoFromSavedFile() {
 		Debug.LogWarning ("Make loading gamestate save info!");
 	}
 
@@ -93,12 +93,12 @@ public class GameState {
 		if (sector == null)
 			resultString += "sector:null, ";
 		else
-			resultString += "sector:" + sector.getName() + ", ";
+			resultString += "sector:" + sector.GetName() + ", ";
 
 		if (location == null)
 			resultString += "location:null]";
 		else
-			resultString += "location:" + location.getName() + "]";
+			resultString += "location:" + location.GetName() + "]";
 		return resultString;
 	}
 }
@@ -120,12 +120,12 @@ public class GameStateManager
 		GameState newGameState = new GameState ();
 
 		if (levelData.sectors.ContainsKey (levelData.startParameters.sectorID))
-			newGameState.sector = GlobalData.resourcesManager.getById<SectorState> (levelData.startParameters.sectorID);
+			newGameState.sector = GlobalData.resourcesManager.GetById<SectorState> (levelData.startParameters.sectorID);
 		else 
 			newGameState.sector = null;
 
 		if (levelData.locations.ContainsKey (levelData.startParameters.locationID))
-			newGameState.location = GlobalData.resourcesManager.getById<LocationState> (levelData.startParameters.locationID);
+			newGameState.location = GlobalData.resourcesManager.GetById<LocationState> (levelData.startParameters.locationID);
 		else 
 			newGameState.location = null;
 
@@ -138,20 +138,20 @@ public class GameStateManager
 	
 	public GameState GetSavedGameState(int saveSlot) {
 		GameState savedGameState = new GameState ();
-		savedGameState.setSaveFileName ("save" + saveSlot.ToString ());
+		savedGameState.SetSaveFileName ("save" + saveSlot.ToString ());
 		return savedGameState;
 	}
 	
 	public void ApplyGameState(GameState gameState) {
-		GlobalData.resourcesManager.resetResources ();
+		GlobalData.resourcesManager.ResetResources ();
 		this.gameState = gameState;
-		gameState.loadDataFromFiles ();	 
+		gameState.LoadDataFromFiles ();	 
 		Debug.Log(gameState.ToString() + " Game state applied");
 	}
 	
 	public void SaveCurrentGameState(int saveSlot) {
-		gameState.setSaveFileName ("save" + saveSlot.ToString ());
-		gameState.saveDataToFiles ();
+		gameState.SetSaveFileName ("save" + saveSlot.ToString ());
+		gameState.SaveDataToFiles ();
 	}
 }
 
